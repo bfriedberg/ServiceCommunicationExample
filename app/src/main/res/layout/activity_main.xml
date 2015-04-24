@@ -10,20 +10,6 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Call Service Directly"
-        android:id="@+id/btnSync"
-        />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Call Service in AsyncTask"
-        android:id="@+id/btnSyncTask"
-        />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="Call Service with response as Message"
         android:id="@+id/btnAsync"
         />

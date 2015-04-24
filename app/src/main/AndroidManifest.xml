@@ -18,11 +18,6 @@
         </activity>
 
         <service
-            android:name=".BinderService"
-            android:enabled="true"
-            android:exported="true" >
-        </service>
-        <service
             android:name=".BinderServiceWithMessenger"
             android:enabled="true"
             android:exported="true" >
