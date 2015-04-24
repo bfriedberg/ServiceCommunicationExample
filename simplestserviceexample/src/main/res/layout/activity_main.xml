@@ -8,8 +8,8 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Call Service in AsyncTask"
-        android:id="@+id/btnSyncTask"
+        android:text="Call Service Directly"
+        android:id="@+id/btnSync"
         />
 
     <Button

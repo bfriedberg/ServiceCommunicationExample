@@ -1,4 +1,4 @@
-package com.sdgsystems.simpleserviceinteraction;
+package com.sdgsystems.simplestserviceexample;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -7,11 +7,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
-import android.os.Messenger;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -24,7 +20,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
     private BinderService.SynchronousServiceBinder mSyncServiceBinder;
 
-    private Button syncTaskButton, clearButton;
+    private Button syncButton, clearButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +28,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
         setContentView(R.layout.activity_main);
         logMessages = (LinearLayout) findViewById(R.id.results);
 
-        syncTaskButton = (Button) findViewById(R.id.btnSyncTask);
+        syncButton = (Button) findViewById(R.id.btnSync);
         clearButton = (Button) findViewById(R.id.btnClear);
 
-        syncTaskButton.setOnClickListener(this);
+        syncButton.setOnClickListener(this);
         clearButton.setOnClickListener(this);
 
 
@@ -47,28 +43,15 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
     @Override
     public void onClick(View view) {
-        if(view == syncTaskButton) {
+        if(view == syncButton) {
 
-            logMessages.addView(getTextView("Calling synchronous service in an AsyncTask"));
-            CallSyncServiceTask task = new CallSyncServiceTask();
-            task.execute(5);
+            logMessages.addView(getTextView("Calling synchronous service"));
+            int random = mSyncServiceBinder.getRandomNumber(5);
+            logMessages.addView(getTextView("Got synchronous random number: " + random));
 
-        }  else if(view == clearButton) {
+        } else if(view == clearButton) {
             logMessages.removeAllViews();
         }
-    }
-
-    private class CallSyncServiceTask extends AsyncTask<Integer, Void, Integer> {
-
-        @Override
-        protected Integer doInBackground(Integer... parms) {
-            return mSyncServiceBinder.getRandomNumber(parms[0]);
-        }
-
-        protected void onPostExecute(Integer randomNumber) {
-            logMessages.addView(getTextView("Received service response at end of asynctask: " + randomNumber));
-        }
-
     }
 
     private ServiceConnection mSynchronousConnection = new ServiceConnection() {

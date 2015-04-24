@@ -57,23 +57,47 @@ public class MainActivity extends Activity implements View.OnClickListener{
     @Override
     public void onClick(View view) {
         if( view == asyncButton) {
-
+            
             logMessages.addView(getTextView("Calling asynchronous service"));
             mAsyncServiceBinder.requestRandomNumberAsync(5);
             logMessages.addView(getTextView("Returned from asynchronous service call, waiting for the number message to arrive"));
 
         } else if(view == clearButton) {
-            logMessages.removeAllViews();
-        } else if (view == heartbeatStart) {
-            logMessages.addView(getTextView("Starting heartbeat thread"));
 
-            Log.d("service_comms", "starting heartbeat");
+            logMessages.removeAllViews();
+
+        } else if (view == heartbeatStart) {
+
+            logMessages.addView(getTextView("Starting heartbeat thread"));
             mAsyncServiceBinder.startHeartBeatThread();
+
         } else if (view == heartbeatStop) {
+
             logMessages.addView(getTextView("Stopping heartbeat thread"));
             mAsyncServiceBinder.stopHeartBeatThread();
+
         }
     }
+
+
+    //Define the messenger and how to handle incoming messages
+    private Messenger mWatsonMessenger = new Messenger(new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            //HANDLE THE MESSAGE based on msg.what
+            if(msg.what == BinderServiceWithMessenger.RANDOM_NUMBER_MESSAGE) {
+
+                logMessages.addView(getTextView("Received asynchronous random number message"));
+                int randomNumber = msg.getData().getInt(BinderServiceWithMessenger.RANDOM_NUMBER_FIELD, 0);
+                logMessages.addView(getTextView("Random number is: " + randomNumber));
+
+            } else if (msg.what == BinderServiceWithMessenger.HEARTBEAT_MESSAGE) {
+
+                logMessages.addView(getTextView("heartbeat!"));
+
+            }
+        }
+    });
 
     private ServiceConnection mAsynchronousConnection = new ServiceConnection() {
         @Override
@@ -98,25 +122,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         }
     };
-
-    //Define the messenger and how to handle incoming messages
-    private Messenger mWatsonMessenger = new Messenger(new Handler() {
-     @Override
-     public void handleMessage(Message msg) {
-        //HANDLE THE MESSAGE based on msg.what
-         if(msg.what == BinderServiceWithMessenger.RANDOM_NUMBER_MESSAGE) {
-
-             logMessages.addView(getTextView("Received asynchronous random number message"));
-             int randomNumber = msg.getData().getInt(BinderServiceWithMessenger.RANDOM_NUMBER_FIELD, 0);
-             logMessages.addView(getTextView("Random number is: " + randomNumber));
-
-         } else if (msg.what == BinderServiceWithMessenger.HEARTBEAT_MESSAGE) {
-
-             logMessages.addView(getTextView("heartbeat!"));
-
-         }
-     }
-    });
 
     private View getTextView(String s) {
         TextView tv = new TextView(this);

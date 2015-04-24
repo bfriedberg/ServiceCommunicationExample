@@ -67,9 +67,9 @@ public class BinderServiceWithMessenger extends Service {
 
         public void startHeartBeatThread() {
 
-            Log.d("binderservicewithmessenger", "starting heartbeat");
             mHeartBeatThread = new HeartBeatThread();
             mHeartBeatThread.start();
+            
         }
 
         public void stopHeartBeatThread() {
@@ -122,19 +122,14 @@ public class BinderServiceWithMessenger extends Service {
     private class HeartBeatThread extends Thread {
         public void run() {
 
-            Log.d("heartbeatthread", "run()");
-
             mHeartBeatThreadRunning = true;
             while (mHeartBeatThreadRunning) {
-
-                Log.d("heartbeatthread", "starting loop");
 
                 try {
                     Thread.sleep(2000);
                 } catch (Exception e) {
                 }
 
-                Log.d("heartbeatthread", "calling runnable");
                 new Thread(heartBeatRunnable).start();
             }
             mHeartBeatThreadRunning = false;
@@ -144,7 +139,6 @@ public class BinderServiceWithMessenger extends Service {
     final Runnable heartBeatRunnable = new Runnable() {
         public void run() {
 
-            Log.d("heartBeatRunnable", "sending heartbeat message");
             Message heartBeatMessage = Message.obtain(null, HEARTBEAT_MESSAGE);
             sendMessageToClients(heartBeatMessage);
         }
