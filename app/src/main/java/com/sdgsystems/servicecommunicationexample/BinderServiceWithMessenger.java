@@ -75,7 +75,6 @@ public class BinderServiceWithMessenger extends Service {
         public void stopHeartBeatThread() {
             if(mHeartBeatThreadRunning) {
                 mHeartBeatThreadRunning = false;
-                //mHeartBeatThread.interrupt();
             }
         }
     }

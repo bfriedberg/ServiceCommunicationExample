@@ -145,8 +145,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
              logMessages.addView(getTextView("Received asynchronous random number message"));
              int randomNumber = msg.getData().getInt(BinderServiceWithMessenger.RANDOM_NUMBER_FIELD, 0);
              logMessages.addView(getTextView("Random number is: " + randomNumber));
+
          } else if (msg.what == BinderServiceWithMessenger.HEARTBEAT_MESSAGE) {
+
              logMessages.addView(getTextView("heartbeat!"));
+
          }
      }
     });
@@ -161,6 +164,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         protected void onPostExecute(Integer randomNumber) {
             logMessages.addView(getTextView("Received service response at end of asynctask: " + randomNumber));
         }
+
     }
 
     private View getTextView(String s) {

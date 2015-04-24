@@ -10,42 +10,42 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Call Synchronous Service"
+        android:text="Call Service Directly"
         android:id="@+id/btnSync"
         />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Call Synchronous Service with AsyncTask"
+        android:text="Call Service in AsyncTask"
         android:id="@+id/btnSyncTask"
         />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Call Asynchronous Service"
+        android:text="Call Service with response as Message"
         android:id="@+id/btnAsync"
         />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start Async Heartbeat"
+        android:text="Start Heartbeat Message thread"
         android:id="@+id/btnHeartbeatStart"
         />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Stop Async Heartbeat"
+        android:text="Stop Heartbeat Message thread"
         android:id="@+id/btnHeartbeatStop"
         />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Clear messages"
+        android:text="Clear Output"
         android:id="@+id/btnClear"
         />
 
