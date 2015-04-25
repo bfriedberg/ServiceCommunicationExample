@@ -69,7 +69,7 @@ public class BinderServiceWithMessenger extends Service {
 
             mHeartBeatThread = new HeartBeatThread();
             mHeartBeatThread.start();
-            
+
         }
 
         public void stopHeartBeatThread() {
@@ -138,7 +138,6 @@ public class BinderServiceWithMessenger extends Service {
 
     final Runnable heartBeatRunnable = new Runnable() {
         public void run() {
-
             Message heartBeatMessage = Message.obtain(null, HEARTBEAT_MESSAGE);
             sendMessageToClients(heartBeatMessage);
         }
