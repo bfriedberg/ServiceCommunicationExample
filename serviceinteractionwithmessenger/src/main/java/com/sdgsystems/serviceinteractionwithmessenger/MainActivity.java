@@ -68,7 +68,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 int randomNumber = msg.getData().getInt(BinderServiceWithMessenger.RANDOM_NUMBER_FIELD, 0);
                 logMessages.addView(getTextView("Random number is: " + randomNumber));
 
-            } 
+            }
         }
     });
 
