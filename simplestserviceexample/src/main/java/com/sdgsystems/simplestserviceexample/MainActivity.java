@@ -42,6 +42,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
     @Override
     public void onPause() {
+        super.onPause();
         unbindService(mSynchronousConnection);
     }
 

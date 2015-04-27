@@ -1,4 +1,4 @@
-package com.sdgsystems.servicecommunicationexample;
+package com.sdgsystems.simplemessengerexample;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -20,8 +20,6 @@ import android.widget.TextView;
 public class MainActivity extends Activity implements View.OnClickListener{
 
     private LinearLayout logMessages;
-
-    //private BinderServiceWithMessenger.AsynchronousServiceBinder mAsyncServiceBinder;
     private Messenger mServiceMessenger = null;
 
     private Button asyncButton, clearButton;
@@ -81,10 +79,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
                 int randomNumber = msg.getData().getInt(BinderServiceWithMessenger.RANDOM_NUMBER_FIELD, 0);
                 logMessages.addView(getTextView("Random number is: " + randomNumber));
 
-            } else if (msg.what == BinderServiceWithMessenger.HEARTBEAT_MESSAGE) {
-
-                logMessages.addView(getTextView("heartbeat!"));
-
             }
         }
     });
@@ -96,34 +90,13 @@ public class MainActivity extends Activity implements View.OnClickListener{
             mBound = true;
             logMessages.addView(getTextView("Bound to Asynchronous Service, registering messenger"));
             mServiceMessenger = new Messenger (service);
-
-            //register a messenger
-            Message msg = Message.obtain(null, BinderServiceWithMessenger.REGISTER_CLIENT_MESSENGER_MESSAGE);
-            msg.replyTo = mWatsonMessenger;
-
-            try {
-                mServiceMessenger.send(msg);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
 
             logMessages.addView(getTextView("Unbound from Asynchronous Service, unregistering messenger"));
-
-            //unregister the messenger
-            Message msg = Message.obtain(null, BinderServiceWithMessenger.UNREGISTER_CLIENT_MESSENGER_MESSAGE);
-            msg.replyTo = mWatsonMessenger;
-
-            try {
-                mServiceMessenger.send(msg);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
             mServiceMessenger = null;
-
             mBound = false;
         }
     };

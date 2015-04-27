@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ServiceCommunicationExample.iml" filepath="$PROJECT_DIR$/ServiceCommunicationExample.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/simplemessengerexample/simplemessengerexample.iml" filepath="$PROJECT_DIR$/simplemessengerexample/simplemessengerexample.iml" />
       <module fileurl="file://$PROJECT_DIR$/simpleserviceinteraction/simpleserviceinteraction.iml" filepath="$PROJECT_DIR$/simpleserviceinteraction/simpleserviceinteraction.iml" />
       <module fileurl="file://$PROJECT_DIR$/simplestserviceexample/simplestserviceexample.iml" filepath="$PROJECT_DIR$/simplestserviceexample/simplestserviceexample.iml" />
     </modules>
