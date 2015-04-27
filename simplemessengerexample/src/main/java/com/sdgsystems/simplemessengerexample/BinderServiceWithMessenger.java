@@ -20,8 +20,6 @@ public class BinderServiceWithMessenger extends Service {
     public static final String RANDOM_NUMBER_FIELD = "RandomNumber";
     public static final String SLEEP_SECONDS_FIELD = "SleepSeconds";
 
-    private ArrayList<Messenger> clientMessengers;
-
     public BinderServiceWithMessenger() {
     }
 
@@ -36,35 +34,24 @@ public class BinderServiceWithMessenger extends Service {
             switch (msg.what) {
 
                 case RANDOM_NUMBER_REQUEST_MESSAGE:
+                    try {
+                        Thread.sleep(msg.getData().getInt(SLEEP_SECONDS_FIELD, 0) * 1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
 
-                    final Messenger responseMessenger = msg.replyTo;
-                    final int sleepSeconds = msg.getData().getInt(SLEEP_SECONDS_FIELD, 0);
+                    int randomNumber = new Random().nextInt(9999);
 
-                    //Run in a new thread due to some binder specifics...
-                    final Runnable randomNumberRunnable = new Runnable() {
-                        public void run() {
-                            try {
-                                Thread.sleep(sleepSeconds * 1000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
+                    Message randomNumberMessage = Message.obtain(null, RANDOM_NUMBER_RESPONSE_MESSAGE);
+                    Bundle dataBundle = new Bundle();
+                    dataBundle.putInt(RANDOM_NUMBER_FIELD, randomNumber);
+                    randomNumberMessage.setData(dataBundle);
 
-                            int randomNumber = new Random().nextInt(9999);
-
-                            Message randomNumberMessage = Message.obtain(null, RANDOM_NUMBER_RESPONSE_MESSAGE);
-                            Bundle dataBundle = new Bundle();
-                            dataBundle.putInt(RANDOM_NUMBER_FIELD, randomNumber);
-                            randomNumberMessage.setData(dataBundle);
-
-                            try {
-                                responseMessenger.send(randomNumberMessage);
-                            } catch (RemoteException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    };
-
-                    new Thread(randomNumberRunnable).start();
+                    try {
+                        msg.replyTo.send(randomNumberMessage);
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
 
                     break;
                 default:

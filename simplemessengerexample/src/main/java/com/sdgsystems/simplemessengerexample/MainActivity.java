@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
 public class MainActivity extends Activity implements View.OnClickListener{
 
     private LinearLayout logMessages;
@@ -38,6 +37,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
         clearButton.setOnClickListener(this);
 
         Intent asyncServiceintent = new Intent(this, BinderServiceWithMessenger.class);
+
         this.bindService(asyncServiceintent, mAsynchronousConnection, Context.BIND_AUTO_CREATE);
     }
 

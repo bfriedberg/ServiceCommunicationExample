@@ -110,6 +110,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
+            mBound = false;
 
             logMessages.addView(getTextView("Unbound from Asynchronous Service, unregistering messenger"));
 
@@ -124,7 +125,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
             }
             mServiceMessenger = null;
 
-            mBound = false;
         }
     };
 
@@ -136,7 +136,6 @@ public class MainActivity extends Activity implements View.OnClickListener{
             unbindService(mAsynchronousConnection);
         }
     }
-
 
     private View getTextView(String s) {
         TextView tv = new TextView(this);

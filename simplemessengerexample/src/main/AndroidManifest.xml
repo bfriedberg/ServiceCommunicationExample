@@ -16,7 +16,8 @@
         <service
             android:name=".BinderServiceWithMessenger"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true"
+            android:process=":remote_process">
         </service>
     </application>
 
