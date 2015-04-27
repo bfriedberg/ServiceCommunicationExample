@@ -5,33 +5,27 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import java.lang.reflect.Array;
-import java.util.Random;
 
 
 public class MainActivity extends Activity implements View.OnClickListener{
 
     private LinearLayout logMessages;
 
-    private BinderServiceWithMessenger.AsynchronousServiceBinder mAsyncServiceBinder;
+    //private BinderServiceWithMessenger.AsynchronousServiceBinder mAsyncServiceBinder;
+    private Messenger mServiceMessenger = null;
 
-    private Button asyncButton, clearButton, heartbeatStart, heartbeatStop;
+    private Button asyncButton, clearButton;
+    private boolean mBound = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,51 +35,57 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
         asyncButton = (Button) findViewById(R.id.btnAsync);
         clearButton = (Button) findViewById(R.id.btnClear);
-        heartbeatStart = (Button) findViewById(R.id.btnHeartbeatStart);
-        heartbeatStop = (Button) findViewById(R.id.btnHeartbeatStop);
 
         asyncButton.setOnClickListener(this);
         clearButton.setOnClickListener(this);
-        heartbeatStart.setOnClickListener(this);
-        heartbeatStop.setOnClickListener(this);
 
         Intent asyncServiceintent = new Intent(this, BinderServiceWithMessenger.class);
         this.bindService(asyncServiceintent, mAsynchronousConnection, Context.BIND_AUTO_CREATE);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+
+        if(mBound) {
+            unbindService(mAsynchronousConnection);
+        }
+    }
 
     @Override
     public void onClick(View view) {
         if( view == asyncButton) {
-            
+
             logMessages.addView(getTextView("Calling asynchronous service"));
-            mAsyncServiceBinder.requestRandomNumberAsync(5);
-            logMessages.addView(getTextView("Returned from asynchronous service call, waiting for the number message to arrive"));
+
+            Message msg = Message.obtain(null, BinderServiceWithMessenger.RANDOM_NUMBER_REQUEST_MESSAGE);
+            Bundle bundle = new Bundle();
+            bundle.putInt(BinderServiceWithMessenger.SLEEP_SECONDS_FIELD, 5);
+            msg.replyTo = mWatsonMessenger;
+            msg.setData(bundle);
+
+            try {
+                mServiceMessenger.send(msg);
+                logMessages.addView(getTextView("Returned from asynchronous service call, waiting for the number message to arrive"));
+            } catch (RemoteException e) {
+                logMessages.addView(getTextView("error requesting random number"));
+                e.printStackTrace();
+            }
 
         } else if(view == clearButton) {
 
             logMessages.removeAllViews();
 
-        } else if (view == heartbeatStart) {
-
-            logMessages.addView(getTextView("Starting heartbeat thread"));
-            mAsyncServiceBinder.startHeartBeatThread();
-
-        } else if (view == heartbeatStop) {
-
-            logMessages.addView(getTextView("Stopping heartbeat thread"));
-            mAsyncServiceBinder.stopHeartBeatThread();
-
         }
     }
-
 
     //Define the messenger and how to handle incoming messages
     private Messenger mWatsonMessenger = new Messenger(new Handler() {
         @Override
         public void handleMessage(Message msg) {
             //HANDLE THE MESSAGE based on msg.what
-            if(msg.what == BinderServiceWithMessenger.RANDOM_NUMBER_MESSAGE) {
+            if(msg.what == BinderServiceWithMessenger.RANDOM_NUMBER_RESPONSE_MESSAGE) {
 
                 logMessages.addView(getTextView("Received asynchronous random number message"));
                 int randomNumber = msg.getData().getInt(BinderServiceWithMessenger.RANDOM_NUMBER_FIELD, 0);
@@ -103,22 +103,39 @@ public class MainActivity extends Activity implements View.OnClickListener{
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
 
+            mBound = true;
             logMessages.addView(getTextView("Bound to Asynchronous Service, registering messenger"));
-            mAsyncServiceBinder = (BinderServiceWithMessenger.AsynchronousServiceBinder) service;
+            mServiceMessenger = new Messenger (service);
 
             //register a messenger
-            mAsyncServiceBinder.registerMessenger(mWatsonMessenger);
+            Message msg = Message.obtain(null, BinderServiceWithMessenger.REGISTER_CLIENT_MESSENGER_MESSAGE);
+            msg.replyTo = mWatsonMessenger;
 
+            try {
+                mServiceMessenger.send(msg);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
 
             logMessages.addView(getTextView("Unbound from Asynchronous Service, unregistering messenger"));
-            mAsyncServiceBinder = null;
 
             //unregister the messenger
-            mAsyncServiceBinder.unregisterMessenger(mWatsonMessenger);
+            Message msg = Message.obtain(null, BinderServiceWithMessenger.UNREGISTER_CLIENT_MESSENGER_MESSAGE);
+            msg.replyTo = mWatsonMessenger;
+
+            try {
+                mServiceMessenger.send(msg);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
+            mServiceMessenger = null;
+
+            mBound = false;
+
 
         }
     };

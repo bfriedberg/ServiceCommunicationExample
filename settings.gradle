@@ -1,1 +1,1 @@
-include ':app', ':simpleserviceinteraction', ':simplestserviceexample', ':serviceinteractionwithmessenger'
+include ':app', ':simpleserviceinteraction', ':simplestserviceexample'

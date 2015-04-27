@@ -44,6 +44,10 @@ public class MainActivity extends Activity implements View.OnClickListener{
         this.bindService(syncServiceIntent, mSynchronousConnection, Context.BIND_AUTO_CREATE);
     }
 
+    @Override
+    public void onPause() {
+        unbindService(mSynchronousConnection);
+    }
 
     @Override
     public void onClick(View view) {

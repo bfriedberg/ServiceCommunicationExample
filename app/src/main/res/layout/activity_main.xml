@@ -17,20 +17,6 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start Heartbeat Message thread"
-        android:id="@+id/btnHeartbeatStart"
-        />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Stop Heartbeat Message thread"
-        android:id="@+id/btnHeartbeatStop"
-        />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:text="Clear Output"
         android:id="@+id/btnClear"
         />
